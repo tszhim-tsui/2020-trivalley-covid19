@@ -1,17 +1,22 @@
 library(data.table)
 
 # Read data from https://data.acgov.org/datasets/
+# Also save a copy
 
 byplace <- fread("https://opendata.arcgis.com/datasets/f6195a2de0b0440c99ceb9290fa95316_0.csv")
+download.file("https://opendata.arcgis.com/datasets/f6195a2de0b0440c99ceb9290fa95316_0.csv", "f6195a2de0b0440c99ceb9290fa95316_0.csv")
 
 cummulative_byplace <- fread("https://opendata.arcgis.com/datasets/e9ed9fa8d5d54d0e80dbfb95b2e142f5_0.csv")
+download.file("https://opendata.arcgis.com/datasets/e9ed9fa8d5d54d0e80dbfb95b2e142f5_0.csv", "e9ed9fa8d5d54d0e80dbfb95b2e142f5_0.csv")
 
 
-# Work on the cummulative dataset
+
+###################################
+# Work on the cummulative dataset #
+###################################
 
 # Change "DtCreate" to a date vector
 cummulative_byplace[, record_date := as.Date(DtCreate)]
-
 
 # Sorry - only interested in Trivalley for now
 # Subset dates and Trivalley data
@@ -60,8 +65,21 @@ trivalley[, day_per100k_livermore := round(day_livermore / pop_livermore * 10000
 
 
 
-# plot_ly()
+
+# get ready to plot
+library(plotly)
 
 
 
 
+
+
+
+# layout
+
+# cummulative
+## raw, per100k
+
+# day change
+# raw, per 100k
+# (plus 7 day rolling average?)

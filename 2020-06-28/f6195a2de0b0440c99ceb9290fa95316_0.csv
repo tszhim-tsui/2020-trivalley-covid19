@@ -1,0 +1,27 @@
+﻿Geography,Cases,Population,Case_Rate,ObjectId
+Alameda County,5670,1685886,336.3,1
+Berkeley LHJ,145,124553.1859,116.4,2
+Alameda County LHJ,5525,1561332.814,353.9,3
+Under Investigation,243,NA,NA,4
+Homeless,90,NA,NA,5
+Address Unknown,11,NA,NA,6
+Santa Rita Jail*,60,NA,NA,7
+Alameda,80,80104.31702,99.9,8
+Albany,11,19586.51338,56.2,9
+Dublin,49,65219.06197,75.1,10
+Emeryville,20,12004.00847,166.6,11
+Fremont,275,234841.1497,117.1,12
+Hayward,960,161016.5678,596.2,13
+Livermore,150,91943.68773,163.1,14
+Newark,159,49196.55038,323.2,15
+Oakland,2227,437194.9877,509.4,16
+Piedmont,13,11534.37675,112.7,17
+Pleasanton,99,81292.00067,121.8,18
+San Leandro,275,90717.6273,303.1,19
+Union City,189,75660.64284,249.8,20
+"Eden Area MAC (Ashland, Cherryland, Hayward Acres, San Lorenzo)",361,69137.06614,522.2,21
+Castro Valley MAC,182,65269.06603,278.8,22
+Fairview MAC,62,10725.38585,578.1,23
+Sunol,<10,996.8187168,NA,24
+Remainder of County,<10,4892.985567,NA,25
+* SRJ notes total 63,"1 released and outside Alameda LHJ; 1 not yet in CalREDIE; 1 tested positive twice",,,26
