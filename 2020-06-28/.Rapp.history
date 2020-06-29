@@ -1017,26 +1017,6 @@ rmarkdown::render(input = "index.Rmd")
 #
 # make dashboard, copy to root directory#
 rmarkdown::render(input = "index.Rmd")
-###################
-# Make dashboard ##
-###################
-#
-# make dashboard, copy to root directory#
-rmarkdown::render(input = "index.Rmd")
-rmarkdown::render(input = "index.Rmd")
-rmarkdown::render(input = "index.Rmd")
-rmarkdown::render(input = "index.Rmd")
-rmarkdown::render(input = "index.Rmd")
-rmarkdown::render(input = "index.Rmd")
-rmarkdown::render(input = "index.Rmd")
-rmarkdown::render(input = "index.Rmd")
-rmarkdown::render(input = "index.Rmd")
-rmarkdown::render(input = "index.Rmd")
-rmarkdown::render(input = "index.Rmd")
-rmarkdown::render(input = "index.Rmd")
-rmarkdown::render(input = "index.Rmd")
-rmarkdown::render(input = "index.Rmd")
-rmarkdown::render(input = "index.Rmd")
 rmarkdown::render(input = "index.Rmd")
 library(data.table)#
 # Get current time for later use#
@@ -1179,3 +1159,4 @@ rmarkdown::render(input = "index.Rmd")
 file.copy("index.html", "../")
 help(file.copy)
 file.copy("index.html", "../", overwrite=T)
+file.copy("index.html", "../docs/", overwrite=T)

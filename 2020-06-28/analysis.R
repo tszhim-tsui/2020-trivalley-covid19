@@ -176,4 +176,4 @@ fig_day_100K <- plot_ly() %>%
 
 # make dashboard, copy to root directory
 rmarkdown::render(input = "index.Rmd")
-file.copy("index.html", "../", overwrite=T)
+file.copy("index.html", "../docs/", overwrite=T)
