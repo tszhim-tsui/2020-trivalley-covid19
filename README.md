@@ -8,4 +8,4 @@ From data.acgov.org - [[1](https://data.acgov.org/datasets/AC-HCSA::alameda-coun
 
 
 ## Updates
-- 2020-06-29: Initial upload
+- 2020-06-29: [Link to dashboard](https://tszhim-tsui.github.io/2020-trivalley-covid19)
