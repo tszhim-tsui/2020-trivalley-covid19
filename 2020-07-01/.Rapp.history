@@ -1,0 +1,1584 @@
+pop_dublin <- byplace[Geography=="Dublin"]$Population#
+pop_pleasanton <- byplace[Geography=="Pleasanton"]$Population#
+pop_livermore <- byplace[Geography=="Livermore"]$Population
+pop_dublin
+trivalley$cummul_dublin
+trivalley[, cummul_dublin / pop_dublin]
+trivalley[, cummul_dublin / pop_dublin * 100000]
+trivalley[, cummul_dublin / pop_dublin * 10000]
+trivalley[, cummul_dublin / pop_dublin * 100]
+trivalley[, cummul_dublin / pop_dublin * 1000]
+trivalley[, cummul_dublin / pop_dublin * 10000]
+trivalley[, cummul_dublin / pop_dublin * 100000]
+trivalley[, cummul_pleasanton / pop_pleasanton * 100000]
+trivalley[, cummul_livermore / pop_livermore * 100000]
+trivalley[, cummul_dublin / pop_dublin * 100000]
+trivalley[, cummul_pleasanton / pop_pleasanton * 100000]
+trivalley[, cummul_livermore / pop_livermore * 100000]
+trivalley[, cummul_per100k_dublin := cummul_dublin / pop_dublin * 100000]
+trivalley[, cummul_per100k_pleasanton := cummul_pleasanton / pop_pleasanton * 100000]
+trivalley[, cummul_per100k_livermore := cummul_livermore / pop_livermore * 100000]
+trivalley
+trivalley[, cummul_per100k_dublin := round(cummul_dublin / pop_dublin * 100000, 2)]
+trivalley
+trivalley[, cummul_per100k_dublin := round(cummul_dublin / pop_dublin * 100000, 2)]#
+trivalley[, cummul_per100k_pleasanton := round(cummul_pleasanton / pop_pleasanton * 100000, 2)]#
+trivalley[, cummul_per100k_livermore := round(cummul_livermore / pop_livermore * 100000, 2)]
+trivalley[, day_per100k_dublin := round(day_dublin / pop_dublin * 100000, 2)]
+trivalley
+trivalley[, day_per100k_dublin := round(day_dublin / pop_dublin * 100000, 2)]#
+trivalley[, day_per100k_pleasanton := round(day_pleasanton / pop_pleasanton * 100000, 2)]#
+trivalley[, day_per100k_livermore := round(day_livermore / pop_livermore * 100000, 2)]
+trivalley
+library(data.table)#
+#
+# Read data from https://data.acgov.org/datasets/#
+#
+byplace <- fread("https://opendata.arcgis.com/datasets/f6195a2de0b0440c99ceb9290fa95316_0.csv")#
+#
+cummulative_byplace <- fread("https://opendata.arcgis.com/datasets/e9ed9fa8d5d54d0e80dbfb95b2e142f5_0.csv")#
+# Work on the cummulative dataset#
+#
+# Change "DtCreate" to a date vector#
+cummulative_byplace[, record_date := as.Date(DtCreate)]#
+# Sorry - only interested in Trivalley for now#
+# Subset dates and Trivalley data#
+# Sort by date#
+trivalley <- cummulative_byplace[, list(record_date, Dublin, Pleasanton, Livermore)]#
+setorder(trivalley, record_date)#
+#
+# Data has both "0" cases and "<10" cases#
+# For ease of plotting, change them to NAs#
+#
+remove_tens <- function(x){#
+	gsub("^0|<10", NA, x)#
+}#
+#
+trivalley <- trivalley[, lapply(.SD, remove_tens)]
+trivalley
+# Rename colums for clarity, fix classes#
+names(trivalley) <- c("record_date", "cummul_dublin", "cummul_pleasanton", "cummul_livermore")#
+trivalley[, record_date := as.Date(record_date)]#
+trivalley[, cummul_dublin := as.integer(cummul_dublin)]#
+trivalley[, cummul_pleasanton := as.integer(cummul_pleasanton)]#
+trivalley[, cummul_livermore := as.integer(cummul_livermore)]#
+# Calculate day change#
+trivalley[, day_dublin := c(NA, diff(cummul_dublin))]#
+trivalley[, day_pleasanton := c(NA, diff(cummul_pleasanton))]#
+trivalley[, day_livermore := c(NA, diff(cummul_livermore))]#
+# Get population numbers as well#
+pop_dublin <- byplace[Geography=="Dublin"]$Population#
+pop_pleasanton <- byplace[Geography=="Pleasanton"]$Population#
+pop_livermore <- byplace[Geography=="Livermore"]$Population#
+# Get cummulative per 100k rate#
+trivalley[, cummul_per100k_dublin := round(cummul_dublin / pop_dublin * 100000, 2)]#
+trivalley[, cummul_per100k_pleasanton := round(cummul_pleasanton / pop_pleasanton * 100000, 2)]#
+trivalley[, cummul_per100k_livermore := round(cummul_livermore / pop_livermore * 100000, 2)]#
+#
+# Calculate day change#
+trivalley[, day_per100k_dublin := round(day_dublin / pop_dublin * 100000, 2)]#
+trivalley[, day_per100k_pleasanton := round(day_pleasanton / pop_pleasanton * 100000, 2)]#
+trivalley[, day_per100k_livermore := round(day_livermore / pop_livermore * 100000, 2)]
+library(data.table)#
+#
+# Read data from https://data.acgov.org/datasets/#
+#
+byplace <- fread("https://opendata.arcgis.com/datasets/f6195a2de0b0440c99ceb9290fa95316_0.csv")
+download.file("https://opendata.arcgis.com/datasets/f6195a2de0b0440c99ceb9290fa95316_0.csv", "f6195a2de0b0440c99ceb9290fa95316_0.csv")
+cummulative_byplace <- fread("https://opendata.arcgis.com/datasets/e9ed9fa8d5d54d0e80dbfb95b2e142f5_0.csv")#
+download.file("https://opendata.arcgis.com/datasets/e9ed9fa8d5d54d0e80dbfb95b2e142f5_0.csv", "e9ed9fa8d5d54d0e80dbfb95b2e142f5_0.csv")
+# Change "DtCreate" to a date vector#
+cummulative_byplace[, record_date := as.Date(DtCreate)]#
+# Sorry - only interested in Trivalley for now#
+# Subset dates and Trivalley data#
+# Sort by date#
+trivalley <- cummulative_byplace[, list(record_date, Dublin, Pleasanton, Livermore)]#
+setorder(trivalley, record_date)#
+#
+# Data has both "0" cases and "<10" cases#
+# For ease of plotting, change them to NAs#
+#
+remove_tens <- function(x){#
+	gsub("^0|<10", NA, x)#
+}#
+#
+trivalley <- trivalley[, lapply(.SD, remove_tens)]#
+#
+# Rename colums for clarity, fix classes#
+names(trivalley) <- c("record_date", "cummul_dublin", "cummul_pleasanton", "cummul_livermore")#
+trivalley[, record_date := as.Date(record_date)]#
+trivalley[, cummul_dublin := as.integer(cummul_dublin)]#
+trivalley[, cummul_pleasanton := as.integer(cummul_pleasanton)]#
+trivalley[, cummul_livermore := as.integer(cummul_livermore)]#
+# Calculate day change#
+trivalley[, day_dublin := c(NA, diff(cummul_dublin))]#
+trivalley[, day_pleasanton := c(NA, diff(cummul_pleasanton))]#
+trivalley[, day_livermore := c(NA, diff(cummul_livermore))]#
+# Get population numbers as well#
+pop_dublin <- byplace[Geography=="Dublin"]$Population#
+pop_pleasanton <- byplace[Geography=="Pleasanton"]$Population#
+pop_livermore <- byplace[Geography=="Livermore"]$Population#
+# Get cummulative per 100k rate#
+trivalley[, cummul_per100k_dublin := round(cummul_dublin / pop_dublin * 100000, 2)]#
+trivalley[, cummul_per100k_pleasanton := round(cummul_pleasanton / pop_pleasanton * 100000, 2)]#
+trivalley[, cummul_per100k_livermore := round(cummul_livermore / pop_livermore * 100000, 2)]#
+#
+# Calculate day change#
+trivalley[, day_per100k_dublin := round(day_dublin / pop_dublin * 100000, 2)]#
+trivalley[, day_per100k_pleasanton := round(day_pleasanton / pop_pleasanton * 100000, 2)]#
+trivalley[, day_per100k_livermore := round(day_livermore / pop_livermore * 100000, 2)]
+trivalley
+library(plotly)
+plot_ly(data=trivalley, mode="lines") %>%#
+	add_trace(x=record_date, y=cummul_dublin)
+plot_ly(data=trivalley, mode="lines") %>%#
+	add_trace(data=trivalley, x=record_date, y=cummul_dublin)
+plot_ly(mode="lines") %>%#
+	add_trace(data=trivalley, x=record_date, y=cummul_dublin)
+plot_ly(mode="lines") %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_dublin)
+plot_ly(mode="lines") %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_dublin) %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_pleasanton) %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_livermore)
+plot_ly(mode="lines") %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_dublin) %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_pleasanton) %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_livermore) %>%#
+	layout(title="Cumulative COVID-19 cases",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)),#
+		yaxis=list(title="Number of cases"))
+trivalley
+dayEarliest <- min(trivalley$record_date, na.rm=T)
+dayEarliest
+dayEarliest <- min(trivalley$record_date, na.rm=T)#
+dayLatest <- max(trivalley$record_date, na.rm=T)
+plot_ly(mode="lines") %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_dublin) %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_pleasanton) %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_livermore) %>%#
+	layout(title="Cumulative COVID-19 cases",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)),#
+		yaxis=list(title="Number of cases"))
+plot_ly(mode="lines") %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_dublin, name="Dublin") %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_pleasanton) %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_livermore) %>%#
+	layout(title="Cumulative COVID-19 cases",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)),#
+		yaxis=list(title="Number of cases"))
+plot_ly(mode="lines") %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_dublin, name="Dublin") %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_pleasanton, name="Pleasanton") %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_livermore, name="Livermore") %>%#
+	layout(title="Cumulative COVID-19 cases",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)),#
+		yaxis=list(title="Number of cases"))
+plot_ly(mode="lines") %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_dublin, size=2, name="Dublin")
+plot_ly(mode="lines") %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_dublin, size=1, name="Dublin")
+plot_ly(mode="lines") %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_dublin, size=0.2, name="Dublin")
+plot_ly(mode="lines") %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_dublin, name="Dublin") %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_pleasanton, name="Pleasanton") %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_livermore, name="Livermore") %>%#
+	layout(title="Cumulative COVID-19 cases",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)),#
+		yaxis=list(title="Number of cases"))
+trivalley
+plot_ly(mode="lines") %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_per100k_dublin, name="Dublin") %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_per100k_pleasanton, name="Pleasanton") %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$cummul_per100k_livermore, name="Livermore") %>%#
+	layout(title="Cummulative COVID-19 cases per 100K population",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)),#
+		yaxis=list(title="Number of cases"))
+plot_ly(mode="lines") %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin") %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$day_pleasanton, name="Pleasanton") %>%#
+	add_trace(x=trivalley$record_date, y=trivalley$day_livermore, name="Livermore") %>%#
+	layout(title="# of new COVID-19 cases by day",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)),#
+		yaxis=list(title="Number of cases"))
+loess(trivalley$day_dublin ~ trivalley$record_date)
+fit
+fit <- loess(trivalley$day_dublin ~ trivalley$record_date)
+fit
+fit <- loess(trivalley$day_dublin ~ trivalley$record_date)
+trivalley$record_date
+trivalley$day_dublin
+fit <- loess(trivalley$day_dublin ~ trivalley$record_date, na.rm=T)
+fit
+help(ts)
+day_livermore_ts <- ts.(data=trivalley$livermore, na.action=na.omit)
+day_livermore_ts <- ts(data=trivalley$livermore, na.action=na.omit)
+day_livermore_ts <- ts(data=trivalley$livermore)
+trivalley$livermore
+day_livermore_ts <- ts(data=trivalley$day_livermore)
+day_livermore_ts
+trivalley$day_livermore
+plot(day_livermore_ts)
+help(ts)
+c(NA)
+mean(c(NA, NA))
+mean(c(NA, 1, 2))
+mean(c(NA, 1, 2), na.rm=T)
+mean(c(NA, NA), na.rm=T)
+mean(c(NA, 1, 2, 3, 4, 5, 6, 7), na.rm=T)
+mean(c(NA, 1, 2, 3, 4, 5, 6, 7)[1:2], na.rm=T)
+mean(c(NA, 1, 2, 3, 4, 5, 6, 7)[1:3], na.rm=T)
+mean(c(NA, 1, 2, 3, 4, 5, 6, 7)[2:3], na.rm=T)
+mean(c(NA, 1, 2, 3, 4, 5, 6, 7)[2:4], na.rm=T)
+mean(c(NA, 1, 2, 3, 4, 5, 6, 7)[1+1:4], na.rm=T)
+mean(c(NA, 1, 2, 3, 4, 5, 6, 7)[2:4], na.rm=T)
+mean(c(NA, 1, 2, 3, 4, 5, 6, 7)[(1+1):4], na.rm=T)
+7day_mean <- function(x){#
+#
+	# loop through each row#
+	vectorlength <- length(x)#
+	for (i in 1:vectorlength){#
+#
+		# for first 6 rows, calculate the mean from row 1 to current row#
+		if (i in 1:6){#
+			mean(x[1:i], na.rm=T)#
+#
+		# otherwise, calculate mean from current-6th row to current row#
+		} else {#
+			mean(x[(i-6):i], na.rm=T)#
+		}#
+	}#
+}
+seven_day_mean <- function(x){#
+#
+	# loop through each row#
+	vectorlength <- length(x)#
+	for (i in 1:vectorlength){#
+#
+		# for first 6 rows, calculate the mean from row 1 to current row#
+		if (i in 1:6){#
+			mean(x[1:i], na.rm=T)#
+#
+		# otherwise, calculate mean from current-6th row to current row#
+		} else {#
+			mean(x[(i-6):i], na.rm=T)#
+		}#
+	}#
+}
+i
+2 in 1:6
+(2 in 1:6)
+2 %in% 1:6
+vectorlength
+seven_day_mean <- function(x){#
+#
+	# loop through each row#
+	vectorlength <- length(x)#
+	for (i in 1:vectorlength){#
+#
+		# for first 6 rows, calculate the mean from row 1 to current row#
+		if (i %in% 1:6){#
+			mean(x[1:i], na.rm=T)#
+#
+		# otherwise, calculate mean from current-6th row to current row#
+		} else {#
+			mean(x[(i-6):i], na.rm=T)#
+		}#
+	}#
+}
+trivalley$day_dublin
+seven_day_mean(trivalley$day_dublin)
+seven_day_mean <- function(x){#
+#
+	# loop through each row#
+	vectorlength <- length(x)#
+	for (i in 1:vectorlength){#
+#
+		# for first 6 rows, calculate the mean from row 1 to current row#
+		if (i %in% 1:6){#
+			return(mean(x[1:i], na.rm=T))#
+#
+		# otherwise, calculate mean from current-6th row to current row#
+		} else {#
+			return(mean(x[(i-6):i], na.rm=T))#
+		}#
+	}#
+}
+seven_day_mean(trivalley$day_dublin)
+seven_day_mean <- function(x){#
+#
+	# loop through each row#
+	vectorlength <- length(x)#
+	for (i in 1:vectorlength){#
+#
+		# for first 6 rows, calculate the mean from row 1 to current row#
+		if (i %in% 1:6){#
+			print(mean(x[1:i], na.rm=T))#
+#
+		# otherwise, calculate mean from current-6th row to current row#
+		} else {#
+			print(mean(x[(i-6):i], na.rm=T))#
+		}#
+	}#
+}
+seven_day_mean(trivalley$day_dublin)
+seven_day_mean <- function(x){#
+#
+	# loop through each row#
+	vectorlength <- length(x)#
+	for (i in 1:vectorlength){#
+#
+		# for first 6 rows, calculate the mean from row 1 to current row#
+		if (i %in% 1:6){#
+			return(mean(x[1:i], na.rm=T))#
+#
+		# otherwise, calculate mean from current-6th row to current row#
+		} else {#
+			return(mean(x[(i-6):i], na.rm=T))#
+		}#
+	}#
+}
+seven_day_mean(trivalley$day_dublin)
+seven_day_mean <- function(x){#
+#
+	# loop through each row#
+	vectorlength <- length(x)#
+	for (i in 1:vectorlength){#
+#
+		# for first 6 rows, calculate the mean from row 1 to current row#
+		if (i %in% 1:6){#
+			mean(x[1:i], na.rm=T))#
+#
+		# otherwise, calculate mean from current-6th row to current row#
+		} else {#
+			mean(x[(i-6):i], na.rm=T))#
+		}#
+	}#
+}
+seven_day_mean <- function(x){#
+#
+	# loop through each row#
+	vectorlength <- length(x)#
+	for (i in 1:vectorlength){#
+#
+		# for first 6 rows, calculate the mean from row 1 to current row#
+		if (i %in% 1:6){#
+			mean(x[1:i], na.rm=T)#
+#
+		# otherwise, calculate mean from current-6th row to current row#
+		} else {#
+			mean(x[(i-6):i], na.rm=T)#
+		}#
+	}#
+}
+a <- seven_day_mean(trivalley$day_dublin)
+a
+seven_day_mean <- function(x){#
+#
+	# loop through each row#
+	vectorlength <- length(x)#
+	for (i in 1:vectorlength){#
+#
+		# for first 6 rows, calculate the mean from row 1 to current row#
+		if (i %in% 1:6){#
+			return(mean(x[1:i], na.rm=T))#
+#
+		# otherwise, calculate mean from current-6th row to current row#
+		} else {#
+			return(mean(x[(i-6):i], na.rm=T))#
+		}#
+	}#
+}
+seven_day_mean(trivalley$day_dublin)
+seven_day_mean(trivalley$day_livermore)
+seven_day_mean <- function(x){#
+#
+	# loop through each row#
+	vectorlength <- length(x)#
+	for (i in 1:vectorlength){#
+#
+		# for first 6 rows, calculate the mean from row 1 to current row#
+		if (i %in% 1:6){#
+			targetmean <- mean(x[1:i], na.rm=T)#
+#
+		# otherwise, calculate mean from current-6th row to current row#
+		} else {#
+			targetmean <- mean(x[(i-6):i], na.rm=T)#
+		}#
+		return(targetmean)#
+	}#
+}
+seven_day_mean(trivalley$day_dublin)
+seven_day_mean <- function(x){#
+#
+	# loop through each row#
+	vectorlength <- length(x)#
+	for (i in 1:vectorlength){#
+#
+		# for first 6 rows, calculate the mean from row 1 to current row#
+		if (i %in% 1:6){#
+			targetmean <- mean(x[1:i], na.rm=T)#
+			return(targetmean)#
+#
+		# otherwise, calculate mean from current-6th row to current row#
+		} else {#
+			targetmean <- mean(x[(i-6):i], na.rm=T)#
+			return(targetmean)#
+		} #
+	}#
+}
+seven_day_mean(trivalley$day_dublin)
+ftoc <- function(tempF){#
+	return(tempF-32)*5/9#
+}
+ftoc(12)
+ftoc(37)
+ftoc(100)
+ftoc <- function(tempF){#
+	return((tempF-32)*5/9)#
+}
+ftoc(100)
+seven_day_mean <- function(x){#
+#
+	# loop through each row#
+	vectorlength <- length(x)#
+	for (i in 1:vectorlength){#
+#
+		# for first 6 rows, calculate the mean from row 1 to current row#
+		if (i %in% 1:6){#
+			targetmean <- mean(x[1:i], na.rm=T)#
+			return(targetmean)#
+#
+		# otherwise, calculate mean from current-6th row to current row#
+		} else {#
+			targetmean <- mean(x[(i-6):i], na.rm=T)#
+			return(targetmean)#
+		} 	#
+	}#
+}
+v
+trivalley$day_dublin
+mean(c("NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"), na.rm=T)
+mean(c(NA, NA, NA, NA, NA, NA, NA, NA, NA), na.rm=T)
+seven_day_mean <- function(x){#
+#
+	# loop through each row#
+	vectorlength <- length(x)#
+	for (i in 1:vectorlength){#
+#
+		# for first 6 rows, calculate the mean from row 1 to current row#
+		if (i %in% 1:6){#
+			targetmean <- mean(x[1:i], na.rm=T)#
+			if(is.na(targetmean)){#
+				return(NA)#
+			} else {#
+				return(targetmean)#
+			}#
+#
+		# otherwise, calculate mean from current-6th row to current row#
+		} else {#
+			targetmean <- mean(x[(i-6):i], na.rm=T)#
+			return(targetmean)#
+		} 	#
+	}#
+}
+seven_day_mean(trivalley$day_dublin)
+seven_day_mean <- function(x){#
+#
+	# loop through each row#
+	vectorlength <- length(x)#
+	for (i in 1:vectorlength){#
+#
+		# for first 6 rows, calculate the mean from row 1 to current row#
+		if (i %in% 1:6){#
+			targetmean <- mean(x[1:i], na.rm=T)#
+			if(is.na(targetmean)){#
+				print(NA)#
+			} else {#
+				print(targetmean)#
+			}#
+#
+		# otherwise, calculate mean from current-6th row to current row#
+		} else {#
+			targetmean <- mean(x[(i-6):i], na.rm=T)#
+			print(targetmean)#
+		} 	#
+	}#
+}
+seven_day_mean(trivalley$day_dublin)
+seven_day_mean(trivalley$day_livermore)
+placeholder <- NULL
+placeholder
+seven_day_mean <- function(x){#
+#
+	# initialize#
+	placeholder <- NULL#
+	# loop through each row#
+	vectorlength <- length(x)#
+	for (i in 1:vectorlength){#
+#
+		# for first 6 rows, calculate the mean from row 1 to current row#
+		if (i %in% 1:6){#
+			targetmean <- mean(x[1:i], na.rm=T)#
+		} #
+		# otherwise, calculate mean from current-6th row to current row#
+		else {#
+			targetmean <- mean(x[(i-6):i], na.rm=T)#
+		} #
+		placeholder <- c(placeholder, targetmean)#
+#
+	}#
+#
+	# return the resulted vector	#
+	return(placeholder)#
+}
+seven_day_mean(trivalley$day_dublin)
+seven_day_mean <- function(x){#
+#
+	# initialize#
+	placeholder <- NULL#
+	# loop through each row#
+	vectorlength <- length(x)#
+	for (i in 1:vectorlength){#
+#
+		# for first 6 rows, calculate the mean from row 1 to current row#
+		if (i %in% 1:6){#
+			targetmean <- mean(x[1:i], na.rm=T)#
+		} #
+		# otherwise, calculate mean from current-6th row to current row#
+		else {#
+			targetmean <- mean(x[(i-6):i], na.rm=T)#
+		} #
+		placeholder <- c(placeholder, round(targetmean, 2))#
+#
+	}#
+#
+	# return the resulted vector	#
+	return(placeholder)#
+}
+seven_day_mean(trivalley$day_dublin)
+barplot(seven_day_mean(trivalley$day_dublin))
+names(trivalley)
+trivalley$day_7mean_dublin <- seven_day_mean(trivalley$day_dublin)
+trivalley$day_7mean_pleasanton <- seven_day_mean(trivalley$day_pleasanton)
+trivalley$day_7mean_livermore <- seven_day_mean(trivalley$day_livermore)
+trivalley
+trivalley[, day_7mean_dublin]
+trivalley[, day_7mean_dublin / pop_dublin * 100000]
+trivalley[, day_7mean_per100k_dublin := round(day_7mean_dublin / pop_dublin * 100000, 2)]
+trivalley[, day_7mean_per100k_pleasanton := round(day_7mean_pleasanton / pop_pleasanton * 100000, 2)]
+trivalley[, day_7mean_per100k_livermore := round(day_7mean_livermore / pop_livermore * 100000, 2)]
+trivalley
+plot_ly() %>%#
+	add_lines(x=trivalley$record_date, y=trivalley$day_7mean_dublin)
+plot_ly() %>%#
+	add_lines(x=trivalley$record_date, y=trivalley$day_7mean_dublin, line=list(shape="spline"))
+plot_ly() %>%#
+	add_trace(mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, line=list(shape="spline"))
+plot_ly() %>%#
+	add_trace(type="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, line=list(shape="spline"))
+plot_ly() %>%#
+	add_lines(x=trivalley$record_date, y=trivalley$day_7mean_dublin, line=list(shape="spline"))
+plot_ly() %>%#
+	add_trace(mode="scatter", x=trivalley$record_date, y=trivalley$day_dublin) %>%#
+	add_lines(x=trivalley$record_date, y=trivalley$day_7mean_dublin, line=list(shape="spline"))
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin) %>%#
+	add_trace(type="scatter", mode="lines". x=trivalley$record_date, y=trivalley$day_7mean_dublin,
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin) %>%#
+	add_trace(type="scatter", mode="lines". x=trivalley$record_date, y=trivalley$day_7mean_dublin, line=list(shape="spline"))
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin)
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin) %>%#
+	add_trace(type="scatter", mode="lines". x=trivalley$record_date, y=trivalley$day_7mean_dublin, line=list(shape="spline"))
+plot_ly() %>%#
+#	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin) %>%#
+	add_trace(type="scatter", mode="lines". x=trivalley$record_date, y=trivalley$day_7mean_dublin, line=list(shape="spline"))
+plot_ly() %>%#
+	add_trace(type="scatter", mode="lines". x=trivalley$record_date, y=trivalley$day_7mean_dublin, line=list(shape="spline"))
+plot_ly() %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, line=list(shape="spline"))
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, line=list(shape="spline"))
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, line=list(shape="spline"), name="Dublin (7 day ave.)")
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, line=list(shape="spline"), name="Dublin (7 day ave.)") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_pleasanton, line=list(shape="spline"), name="Pleasanton (7 day ave.)") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_livermore, line=list(shape="spline"), name="Livermore (7 day ave.)")
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", opacity=0.1)
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", opacity=0.2)
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", opacity=0.5)
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", opacity=0.4)
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", marker=list(opacity=0.4))
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", marker=list(opacity=0.4, color="red"))
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", marker=list(opacity=0.4, color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, line=list(shape="spline", color="green"), name="Dublin (7 day ave.)")
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", marker=list(opacity=0.4, color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, line=list(shape="spline", color="green"), name="Dublin (7 day ave.)") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_pleasanton, line=list(shape="spline", color="blue"), name="Pleasanton (7 day ave.)") %>%
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", marker=list(opacity=0.4, color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, line=list(shape="spline", color="green"), name="Dublin (7 day ave.)") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_pleasanton, line=list(shape="spline", color="blue"), name="Pleasanton (7 day ave.)")
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, line=list(shape="spline", color="green"), name="Dublin (7 day ave.)") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_pleasanton, line=list(shape="spline", color="beige"), name="Pleasanton (7 day ave.)") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_livermore, line=list(shape="spline", color="blue"), name="Livermore (7 day ave.)")
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, line=list(shape="spline", color="green"), name="Dublin (7 day ave.)") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_pleasanton, line=list(shape="spline", color="orange"), name="Pleasanton (7 day ave.)") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_livermore, line=list(shape="spline", color="blue"), name="Livermore (7 day ave.)")
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_pleasanton, name="Dublin (raw)", marker=list(opacity=0.2, color="orange")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_livermore, name="Dublin (raw)", marker=list(opacity=0.2, color="blue")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, line=list(shape="spline", color="green"), name="Dublin (7 day ave.)") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_pleasanton, line=list(shape="spline", color="orange"), name="Pleasanton (7 day ave.)") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_livermore, line=list(shape="spline", color="blue"), name="Livermore (7 day ave.)")
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_pleasanton, name="Pleasanton (raw)", marker=list(opacity=0.2, color="orange")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_livermore, name="Livermore (raw)", marker=list(opacity=0.2, color="blue")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, line=list(shape="spline", color="green"), name="Dublin (7 day ave.)") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_pleasanton, line=list(shape="spline", color="orange"), name="Pleasanton (7 day ave.)") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_livermore, line=list(shape="spline", color="blue"), name="Livermore (7 day ave.)")
+plot_ly() %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_dublin, name="Dublin") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_pleasanton, name="Pleasanton") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_livermore, name="Livermore") %>%#
+	layout(title="Cummulative # of COVID-19 cases",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)),#
+		yaxis=list(title="Number of cases"))
+plot_ly() %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_dublin, name="Dublin", line=list(color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_pleasanton, name="Pleasanton", line=list(color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_livermore, name="Livermore", line=list(color="blue")) %>%#
+	layout(title="Cummulative # of COVID-19 cases",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)),#
+		yaxis=list(title="Number of cases"))
+plot_ly(mode="lines") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_per100k_dublin, name="Dublin", line=list(color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_per100k_pleasanton, name="Pleasanton", line=list(color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_per100k_livermore, name="Livermore", line=list(color="blue")) %>%#
+	layout(title="Cummulative COVID-19 cases per 100K population",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)),#
+		yaxis=list(title="Number of cases"))
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_pleasanton, name="Pleasanton (raw)", marker=list(opacity=0.2, color="orange")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_livermore, name="Livermore (raw)", marker=list(opacity=0.2, color="blue")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, name="Dublin (7 day ave.)", line=list(shape="spline", color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_pleasanton, name="Pleasanton (7 day ave.)", line=list(shape="spline", color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_livermore, name="Livermore (7 day ave.)", line=list(shape="spline", color="blue")) %>%#
+	layout(title="# of new COVID-19 cases by day",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)),#
+		yaxis=list(title="Number of cases"))
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_pleasanton, name="Pleasanton (raw)", marker=list(opacity=0.2, color="orange")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_livermore, name="Livermore (raw)", marker=list(opacity=0.2, color="blue")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, name="Dublin (7 day ave.)", line=list(shape="spline", color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_pleasanton, name="Pleasanton (7 day ave.)", line=list(shape="spline", color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_livermore, name="Livermore (7 day ave.)", line=list(shape="spline", color="blue")) %>%#
+	layout(title="# of new COVID-19 cases by day\nDots = raw, lines = 7 day moving average",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)),#
+		yaxis=list(title="Number of cases"))
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_pleasanton, name="Pleasanton (raw)", marker=list(opacity=0.2, color="orange")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_livermore, name="Livermore (raw)", marker=list(opacity=0.2, color="blue")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, name="Dublin (7 day ave.)", line=list(shape="spline", color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_pleasanton, name="Pleasanton (7 day ave.)", line=list(shape="spline", color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_livermore, name="Livermore (7 day ave.)", line=list(shape="spline", color="blue")) %>%#
+	layout(title="# of new COVID-19 cases by day\nDots = raw numbers, lines = 7 day moving average",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)),#
+		yaxis=list(title="Number of cases"))
+trivalley
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_pleasanton, name="Pleasanton (raw)", marker=list(opacity=0.2, color="orange")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_livermore, name="Livermore (raw)", marker=list(opacity=0.2, color="blue")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_dublin, name="Dublin (7 day ave.)", line=list(shape="spline", color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_pleasanton, name="Pleasanton (7 day ave.)", line=list(shape="spline", color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_livermore, name="Livermore (7 day ave.)", line=list(shape="spline", color="blue")) %>%#
+	layout(title="# of new COVID-19 cases per 100K population, by day\nDots = raw numbers, lines = 7 day moving average",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)),#
+		yaxis=list(title="Number of cases"))
+plot_ly() %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_dublin, name="Dublin", line=list(color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_pleasanton, name="Pleasanton", line=list(color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_livermore, name="Livermore", line=list(color="blue")) %>%#
+	layout(title="Cummulative # of COVID-19 cases",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)),#
+		yaxis=list(title="Number of cases"))
+plot_ly() %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_dublin, name="Dublin", line=list(color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_pleasanton, name="Pleasanton", line=list(color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_livermore, name="Livermore", line=list(color="blue")) %>%#
+	layout(title="Cummulative # of COVID-19 cases",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))
+plot_ly(mode="lines") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_per100k_dublin, name="Dublin", line=list(color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_per100k_pleasanton, name="Pleasanton", line=list(color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_per100k_livermore, name="Livermore", line=list(color="blue")) %>%#
+	layout(title="Cummulative # of COVID-19 cases, per 100K population",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))
+plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_pleasanton, name="Pleasanton (raw)", marker=list(opacity=0.2, color="orange")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_livermore, name="Livermore (raw)", marker=list(opacity=0.2, color="blue")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, name="Dublin (7 day ave.)", line=list(shape="spline", color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_pleasanton, name="Pleasanton (7 day ave.)", line=list(shape="spline", color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_livermore, name="Livermore (7 day ave.)", line=list(shape="spline", color="blue")) %>%#
+	layout(title="# of new COVID-19 cases by day\nDots = raw numbers, lines = 7 day moving average",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))
+fig_cummul <- plot_ly() %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_dublin, name="Dublin", line=list(color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_pleasanton, name="Pleasanton", line=list(color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_livermore, name="Livermore", line=list(color="blue")) %>%#
+	layout(title="Cummulative # of COVID-19 cases",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+#
+fig_cummul_100K <- plot_ly(mode="lines") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_per100k_dublin, name="Dublin", line=list(color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_per100k_pleasanton, name="Pleasanton", line=list(color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_per100k_livermore, name="Livermore", line=list(color="blue")) %>%#
+	layout(title="Cummulative # of COVID-19 cases, per 100K population",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))
+library(plotly)#
+#
+fig_cummul <- plot_ly() %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_dublin, name="Dublin", line=list(color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_pleasanton, name="Pleasanton", line=list(color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_livermore, name="Livermore", line=list(color="blue")) %>%#
+	layout(title="Cummulative # of COVID-19 cases",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+#
+fig_cummul_100K <- plot_ly(mode="lines") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_per100k_dublin, name="Dublin", line=list(color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_per100k_pleasanton, name="Pleasanton", line=list(color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cummul_per100k_livermore, name="Livermore", line=list(color="blue")) %>%#
+	layout(title="Cummulative # of COVID-19 cases, per 100K population",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+fig_day <- plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_pleasanton, name="Pleasanton (raw)", marker=list(opacity=0.2, color="orange")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_livermore, name="Livermore (raw)", marker=list(opacity=0.2, color="blue")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, name="Dublin (7 day ave.)", line=list(shape="spline", color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_pleasanton, name="Pleasanton (7 day ave.)", line=list(shape="spline", color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_livermore, name="Livermore (7 day ave.)", line=list(shape="spline", color="blue")) %>%#
+	layout(title="# of new COVID-19 cases by day\nDots = raw numbers, lines = 7 day average",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+fig_day_100K <- plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_pleasanton, name="Pleasanton (raw)", marker=list(opacity=0.2, color="orange")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_livermore, name="Livermore (raw)", marker=list(opacity=0.2, color="blue")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_dublin, name="Dublin (7 day ave.)", line=list(shape="spline", color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_pleasanton, name="Pleasanton (7 day ave.)", line=list(shape="spline", color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_livermore, name="Livermore (7 day ave.)", line=list(shape="spline", color="blue")) %>%#
+	layout(title="# of new COVID-19 cases per 100K population, by day\nDots = raw numbers, lines = 7 day average",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))
+sys.time()
+sys.Time()
+Sys.time
+Sys.time()
+currenttime
+currenttime <- Sys.time()
+system.time()
+currenttime <- Sys.time()
+currenttime
+currenttime <- Sys.time()
+currenttime
+as.POSIXlt(currenttime)
+format(currenttime, %Y)
+format(currenttime, "%Y")
+format(currenttime, "%Y-%B")
+format(currenttime, "%Y-%m-%d")
+format(currenttime, "%Y-%m-%d, %H:%M")
+format(Sys.time(), "%Y-%m-%d, %H:%M")
+format(Sys.time(), "%Y-%m-%d, %H:%M, %z")
+format(Sys.time(), "%Y-%m-%d, %H:%M")
+class(format(Sys.time(), "%Y-%m-%d, %H:%M"))
+currenttime <- format(Sys.time(), "%Y-%m-%d, %H:%M")
+currenttime
+currenttime <- paste("Last updated:", format(Sys.time(), "%Y-%m-%d, %H:%M"), "Pacific Time", sep="")
+currenttime
+currenttime <- paste("Last updated: ", format(Sys.time(), "%Y-%m-%d, %H:%M"), "Pacific Time", sep="")
+currenttime
+currenttime <- paste("Last updated:", format(Sys.time(), "%Y-%m-%d, %H:%M"), "Pacific Time", sep=" ")
+currenttime
+currenttime <- paste("Last updated: ", format(Sys.time(), "%Y-%m-%d, %H:%M"), ", Pacific Time", sep="")
+currenttime
+currenttime <- paste("Last updated: ", format(Sys.time(), "%Y-%m-%d %H:%M"), ", Pacific Time", sep="")
+currenttime
+currenttime <- paste("Last updated: ", format(Sys.time(), "%Y-%m-%d %H:%M"), " (Pacific Time)", sep="")
+currenttime
+library(data.table)#
+# Get current time for later use#
+currenttime <- paste("Last updated: ", format(Sys.time(), "%Y-%m-%d %H:%M"), " (Pacific Time)", sep="")#
+#
+# Read data from https://data.acgov.org/datasets/#
+# Also save a copy#
+#
+byplace <- fread("https://opendata.arcgis.com/datasets/f6195a2de0b0440c99ceb9290fa95316_0.csv")#
+download.file("https://opendata.arcgis.com/datasets/f6195a2de0b0440c99ceb9290fa95316_0.csv", "f6195a2de0b0440c99ceb9290fa95316_0.csv")#
+#
+cumulative_byplace <- fread("https://opendata.arcgis.com/datasets/e9ed9fa8d5d54d0e80dbfb95b2e142f5_0.csv")#
+download.file("https://opendata.arcgis.com/datasets/e9ed9fa8d5d54d0e80dbfb95b2e142f5_0.csv", "e9ed9fa8d5d54d0e80dbfb95b2e142f5_0.csv")#
+#############################
+# Data wrangling / summary ##
+#############################
+#
+# Change "DtCreate" to a date vector#
+cumulative_byplace[, record_date := as.Date(DtCreate)]#
+# Sorry - only interested in Trivalley for now#
+# Subset dates and Trivalley data#
+# Sort by date#
+trivalley <- cumulative_byplace[, list(record_date, Dublin, Pleasanton, Livermore)]#
+setorder(trivalley, record_date)#
+#
+# get the earliest and latest dates in dataset#
+dayEarliest <- min(trivalley$record_date, na.rm=T)#
+dayLatest <- max(trivalley$record_date, na.rm=T)#
+# Data has both "0" cases and "<10" cases#
+# For ease of plotting, change them to NAs#
+#
+remove_tens <- function(x){#
+	gsub("^0|<10", NA, x)#
+}#
+#
+trivalley <- trivalley[, lapply(.SD, remove_tens)]#
+# Rename columns for clarity, fix classes#
+names(trivalley) <- c("record_date", "cumul_dublin", "cumul_pleasanton", "cumul_livermore")#
+trivalley[, record_date := as.Date(record_date)]#
+trivalley[, cumul_dublin := as.integer(cumul_dublin)]#
+trivalley[, cumul_pleasanton := as.integer(cumul_pleasanton)]#
+trivalley[, cumul_livermore := as.integer(cumul_livermore)]#
+# Calculate day change#
+trivalley[, day_dublin := c(NA, diff(cumul_dublin))]#
+trivalley[, day_pleasanton := c(NA, diff(cumul_pleasanton))]#
+trivalley[, day_livermore := c(NA, diff(cumul_livermore))]#
+# Calculate (smoothed) 7 day average for the day change#
+# feed in a vector, returns a vector#
+seven_day_mean <- function(x){#
+#
+	# initialize#
+	placeholder <- NULL#
+	# loop through each row#
+	vectorlength <- length(x)#
+	for (i in 1:vectorlength){#
+#
+		# for first 6 rows, calculate the mean from row 1 to current row#
+		if (i %in% 1:6){#
+			targetmean <- mean(x[1:i], na.rm=T)#
+		} #
+		# otherwise, calculate mean from current-6th row to current row#
+		else {#
+			targetmean <- mean(x[(i-6):i], na.rm=T)#
+		} #
+		placeholder <- c(placeholder, round(targetmean, 2))#
+#
+	}#
+#
+	# return the resulted vector	#
+	return(placeholder)#
+}#
+#
+trivalley$day_7mean_dublin <- seven_day_mean(trivalley$day_dublin)#
+trivalley$day_7mean_pleasanton <- seven_day_mean(trivalley$day_pleasanton)#
+trivalley$day_7mean_livermore <- seven_day_mean(trivalley$day_livermore)#
+# Get population numbers as well#
+pop_dublin <- byplace[Geography=="Dublin"]$Population#
+pop_pleasanton <- byplace[Geography=="Pleasanton"]$Population#
+pop_livermore <- byplace[Geography=="Livermore"]$Population#
+# Get cumulative per 100k rate#
+trivalley[, cumul_per100k_dublin := round(cumul_dublin / pop_dublin * 100000, 2)]#
+trivalley[, cumul_per100k_pleasanton := round(cumul_pleasanton / pop_pleasanton * 100000, 2)]#
+trivalley[, cumul_per100k_livermore := round(cumul_livermore / pop_livermore * 100000, 2)]#
+# Calculate day changes per 100k rates#
+trivalley[, day_per100k_dublin := round(day_dublin / pop_dublin * 100000, 2)]#
+trivalley[, day_per100k_pleasanton := round(day_pleasanton / pop_pleasanton * 100000, 2)]#
+trivalley[, day_per100k_livermore := round(day_livermore / pop_livermore * 100000, 2)]#
+#
+trivalley[, day_7mean_per100k_dublin := round(day_7mean_dublin / pop_dublin * 100000, 2)]#
+trivalley[, day_7mean_per100k_pleasanton := round(day_7mean_pleasanton / pop_pleasanton * 100000, 2)]#
+trivalley[, day_7mean_per100k_livermore := round(day_7mean_livermore / pop_livermore * 100000, 2)]#
+###############
+# Make plots ##
+###############
+#
+library(plotly)#
+#
+# cumulative#
+fig_cumul <- plot_ly() %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_dublin, name="Dublin", line=list(color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_pleasanton, name="Pleasanton", line=list(color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_livermore, name="Livermore", line=list(color="blue")) %>%#
+	layout(title="cumulative # of COVID-19 cases",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+#
+# cumulative per 100K#
+fig_cumul_100K <- plot_ly(mode="lines") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_per100k_dublin, name="Dublin", line=list(color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_per100k_pleasanton, name="Pleasanton", line=list(color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_per100k_livermore, name="Livermore", line=list(color="blue")) %>%#
+	layout(title="cumulative # of COVID-19 cases, per 100K population",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+# Day changes#
+fig_day <- plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_pleasanton, name="Pleasanton (raw)", marker=list(opacity=0.2, color="orange")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_livermore, name="Livermore (raw)", marker=list(opacity=0.2, color="blue")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, name="Dublin (7 day ave.)", line=list(shape="spline", color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_pleasanton, name="Pleasanton (7 day ave.)", line=list(shape="spline", color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_livermore, name="Livermore (7 day ave.)", line=list(shape="spline", color="blue")) %>%#
+	layout(title="# of new COVID-19 cases by day\nDots = raw numbers, lines = 7 day average",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+#
+# Day changes, per 100K#
+fig_day_100K <- plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_pleasanton, name="Pleasanton (raw)", marker=list(opacity=0.2, color="orange")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_livermore, name="Livermore (raw)", marker=list(opacity=0.2, color="blue")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_dublin, name="Dublin (7 day ave.)", line=list(shape="spline", color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_pleasanton, name="Pleasanton (7 day ave.)", line=list(shape="spline", color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_livermore, name="Livermore (7 day ave.)", line=list(shape="spline", color="blue")) %>%#
+	layout(title="# of new COVID-19 cases per 100K population, by day\nDots = raw numbers, lines = 7 day average",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))
+rmarkdown::render(input = "index.Rmd")
+###############
+# Make plots ##
+###############
+#
+library(plotly)#
+#
+# cumulative#
+fig_cumul <- plot_ly() %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_dublin, name="Dublin", line=list(color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_pleasanton, name="Pleasanton", line=list(color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_livermore, name="Livermore", line=list(color="blue")) %>%#
+	layout(title="Cumulative # of COVID-19 cases",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+#
+# cumulative per 100K#
+fig_cumul_100K <- plot_ly(mode="lines") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_per100k_dublin, name="Dublin", line=list(color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_per100k_pleasanton, name="Pleasanton", line=list(color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_per100k_livermore, name="Livermore", line=list(color="blue")) %>%#
+	layout(title="Cumulative # of COVID-19 cases, per 100K population",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+# Day changes#
+fig_day <- plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_pleasanton, name="Pleasanton (raw)", marker=list(opacity=0.2, color="orange")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_livermore, name="Livermore (raw)", marker=list(opacity=0.2, color="blue")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, name="Dublin (7 day ave.)", line=list(shape="spline", color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_pleasanton, name="Pleasanton (7 day ave.)", line=list(shape="spline", color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_livermore, name="Livermore (7 day ave.)", line=list(shape="spline", color="blue")) %>%#
+	layout(title="# of new COVID-19 cases by day\nDots = raw numbers, lines = 7 day average",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+#
+# Day changes, per 100K#
+fig_day_100K <- plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_pleasanton, name="Pleasanton (raw)", marker=list(opacity=0.2, color="orange")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_livermore, name="Livermore (raw)", marker=list(opacity=0.2, color="blue")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_dublin, name="Dublin (7 day ave.)", line=list(shape="spline", color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_pleasanton, name="Pleasanton (7 day ave.)", line=list(shape="spline", color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_livermore, name="Livermore (7 day ave.)", line=list(shape="spline", color="blue")) %>%#
+	layout(title="# of new COVID-19 cases per 100K population, by day\nDots = raw numbers, lines = 7 day average",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+###################
+# Make dashboard ##
+###################
+#
+# make dashboard, copy to root directory#
+rmarkdown::render(input = "index.Rmd")
+###################
+# Make dashboard ##
+###################
+#
+# make dashboard, copy to root directory#
+rmarkdown::render(input = "index.Rmd")
+rmarkdown::render(input = "index.Rmd")
+library(data.table)#
+# Get current time for later use#
+currenttime <- paste("Last updated: ", format(Sys.time(), "%Y-%m-%d %H:%M"), " (Pacific Time)", sep="")#
+#
+# Read data from https://data.acgov.org/datasets/#
+# Also save a copy#
+#
+byplace <- fread("https://opendata.arcgis.com/datasets/f6195a2de0b0440c99ceb9290fa95316_0.csv")#
+download.file("https://opendata.arcgis.com/datasets/f6195a2de0b0440c99ceb9290fa95316_0.csv", "f6195a2de0b0440c99ceb9290fa95316_0.csv")#
+#
+cumulative_byplace <- fread("https://opendata.arcgis.com/datasets/e9ed9fa8d5d54d0e80dbfb95b2e142f5_0.csv")#
+download.file("https://opendata.arcgis.com/datasets/e9ed9fa8d5d54d0e80dbfb95b2e142f5_0.csv", "e9ed9fa8d5d54d0e80dbfb95b2e142f5_0.csv")#
+#############################
+# Data wrangling / summary ##
+#############################
+#
+# Change "DtCreate" to a date vector#
+cumulative_byplace[, record_date := as.Date(DtCreate)]#
+# Sorry - only interested in Trivalley for now#
+# Subset dates and Trivalley data#
+# Sort by date#
+trivalley <- cumulative_byplace[, list(record_date, Dublin, Pleasanton, Livermore)]#
+setorder(trivalley, record_date)#
+#
+# get the earliest and latest dates in dataset#
+dayEarliest <- min(trivalley$record_date, na.rm=T)#
+dayLatest <- max(trivalley$record_date, na.rm=T)#
+# Data has both "0" cases and "<10" cases#
+# For ease of plotting, change them to NAs#
+#
+remove_tens <- function(x){#
+	gsub("^0|<10", NA, x)#
+}#
+#
+trivalley <- trivalley[, lapply(.SD, remove_tens)]#
+# Rename columns for clarity, fix classes#
+names(trivalley) <- c("record_date", "cumul_dublin", "cumul_pleasanton", "cumul_livermore")#
+trivalley[, record_date := as.Date(record_date)]#
+trivalley[, cumul_dublin := as.integer(cumul_dublin)]#
+trivalley[, cumul_pleasanton := as.integer(cumul_pleasanton)]#
+trivalley[, cumul_livermore := as.integer(cumul_livermore)]#
+# Calculate day change#
+trivalley[, day_dublin := c(NA, diff(cumul_dublin))]#
+trivalley[, day_pleasanton := c(NA, diff(cumul_pleasanton))]#
+trivalley[, day_livermore := c(NA, diff(cumul_livermore))]#
+# Calculate (smoothed) 7 day average for the day change#
+# feed in a vector, returns a vector#
+seven_day_mean <- function(x){#
+#
+	# initialize#
+	placeholder <- NULL#
+	# loop through each row#
+	vectorlength <- length(x)#
+	for (i in 1:vectorlength){#
+#
+		# for first 6 rows, calculate the mean from row 1 to current row#
+		if (i %in% 1:6){#
+			targetmean <- mean(x[1:i], na.rm=T)#
+		} #
+		# otherwise, calculate mean from current-6th row to current row#
+		else {#
+			targetmean <- mean(x[(i-6):i], na.rm=T)#
+		} #
+		placeholder <- c(placeholder, round(targetmean, 2))#
+#
+	}#
+#
+	# return the resulted vector	#
+	return(placeholder)#
+}#
+#
+trivalley$day_7mean_dublin <- seven_day_mean(trivalley$day_dublin)#
+trivalley$day_7mean_pleasanton <- seven_day_mean(trivalley$day_pleasanton)#
+trivalley$day_7mean_livermore <- seven_day_mean(trivalley$day_livermore)#
+# Get population numbers as well#
+pop_dublin <- byplace[Geography=="Dublin"]$Population#
+pop_pleasanton <- byplace[Geography=="Pleasanton"]$Population#
+pop_livermore <- byplace[Geography=="Livermore"]$Population#
+# Get cumulative per 100k rate#
+trivalley[, cumul_per100k_dublin := round(cumul_dublin / pop_dublin * 100000, 2)]#
+trivalley[, cumul_per100k_pleasanton := round(cumul_pleasanton / pop_pleasanton * 100000, 2)]#
+trivalley[, cumul_per100k_livermore := round(cumul_livermore / pop_livermore * 100000, 2)]#
+# Calculate day changes per 100k rates#
+trivalley[, day_per100k_dublin := round(day_dublin / pop_dublin * 100000, 2)]#
+trivalley[, day_per100k_pleasanton := round(day_pleasanton / pop_pleasanton * 100000, 2)]#
+trivalley[, day_per100k_livermore := round(day_livermore / pop_livermore * 100000, 2)]#
+#
+trivalley[, day_7mean_per100k_dublin := round(day_7mean_dublin / pop_dublin * 100000, 2)]#
+trivalley[, day_7mean_per100k_pleasanton := round(day_7mean_pleasanton / pop_pleasanton * 100000, 2)]#
+trivalley[, day_7mean_per100k_livermore := round(day_7mean_livermore / pop_livermore * 100000, 2)]#
+###############
+# Make plots ##
+###############
+#
+library(plotly)#
+#
+# cumulative#
+fig_cumul <- plot_ly() %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_dublin, name="Dublin", line=list(color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_pleasanton, name="Pleasanton", line=list(color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_livermore, name="Livermore", line=list(color="blue")) %>%#
+	layout(title="Cumulative # of COVID-19 cases",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+#
+# cumulative per 100K#
+fig_cumul_100K <- plot_ly(mode="lines") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_per100k_dublin, name="Dublin", line=list(color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_per100k_pleasanton, name="Pleasanton", line=list(color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_per100k_livermore, name="Livermore", line=list(color="blue")) %>%#
+	layout(title="Cumulative # of COVID-19 cases, per 100K population",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+# Day changes#
+fig_day <- plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_pleasanton, name="Pleasanton (raw)", marker=list(opacity=0.2, color="orange")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_livermore, name="Livermore (raw)", marker=list(opacity=0.2, color="blue")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, name="Dublin (7 day ave.)", line=list(shape="spline", color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_pleasanton, name="Pleasanton (7 day ave.)", line=list(shape="spline", color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_livermore, name="Livermore (7 day ave.)", line=list(shape="spline", color="blue")) %>%#
+	layout(title="# of new COVID-19 cases by day\nDots = raw numbers, lines = 7 day average",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+#
+# Day changes, per 100K#
+fig_day_100K <- plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_pleasanton, name="Pleasanton (raw)", marker=list(opacity=0.2, color="orange")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_livermore, name="Livermore (raw)", marker=list(opacity=0.2, color="blue")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_dublin, name="Dublin (7 day ave.)", line=list(shape="spline", color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_pleasanton, name="Pleasanton (7 day ave.)", line=list(shape="spline", color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_livermore, name="Livermore (7 day ave.)", line=list(shape="spline", color="blue")) %>%#
+	layout(title="# of new COVID-19 cases per 100K population, by day\nDots = raw numbers, lines = 7 day average",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+###################
+# Make dashboard ##
+###################
+#
+# make dashboard, copy to root directory#
+rmarkdown::render(input = "index.Rmd")
+file.copy("index.html", "../")
+help(file.copy)
+file.copy("index.html", "../", overwrite=T)
+file.copy("index.html", "../docs/", overwrite=T)
+library(data.table)#
+# Get current time for later use#
+currenttime <- paste("Last updated: ", format(Sys.time(), "%Y-%m-%d %H:%M"), " (Pacific Time)", sep="")#
+#
+# Read data from https://data.acgov.org/datasets/#
+# Also save a copy#
+#
+byplace <- fread("https://opendata.arcgis.com/datasets/f6195a2de0b0440c99ceb9290fa95316_0.csv")#
+download.file("https://opendata.arcgis.com/datasets/f6195a2de0b0440c99ceb9290fa95316_0.csv", "f6195a2de0b0440c99ceb9290fa95316_0.csv")#
+#
+cumulative_byplace <- fread("https://opendata.arcgis.com/datasets/e9ed9fa8d5d54d0e80dbfb95b2e142f5_0.csv")#
+download.file("https://opendata.arcgis.com/datasets/e9ed9fa8d5d54d0e80dbfb95b2e142f5_0.csv", "e9ed9fa8d5d54d0e80dbfb95b2e142f5_0.csv")#
+#############################
+# Data wrangling / summary ##
+#############################
+#
+# Change "DtCreate" to a date vector#
+cumulative_byplace[, record_date := as.Date(DtCreate)]#
+# Sorry - only interested in Trivalley for now#
+# Subset dates and Trivalley data#
+# Sort by date#
+trivalley <- cumulative_byplace[, list(record_date, Dublin, Pleasanton, Livermore)]#
+setorder(trivalley, record_date)#
+#
+# get the earliest and latest dates in dataset#
+dayEarliest <- min(trivalley$record_date, na.rm=T)#
+dayLatest <- max(trivalley$record_date, na.rm=T)#
+# Data has both "0" cases and "<10" cases#
+# For ease of plotting, change them to NAs#
+#
+remove_tens <- function(x){#
+	gsub("^0|<10", NA, x)#
+}#
+#
+trivalley <- trivalley[, lapply(.SD, remove_tens)]#
+# Rename columns for clarity, fix classes#
+names(trivalley) <- c("record_date", "cumul_dublin", "cumul_pleasanton", "cumul_livermore")#
+trivalley[, record_date := as.Date(record_date)]#
+trivalley[, cumul_dublin := as.integer(cumul_dublin)]#
+trivalley[, cumul_pleasanton := as.integer(cumul_pleasanton)]#
+trivalley[, cumul_livermore := as.integer(cumul_livermore)]#
+# Calculate day change#
+trivalley[, day_dublin := c(NA, diff(cumul_dublin))]#
+trivalley[, day_pleasanton := c(NA, diff(cumul_pleasanton))]#
+trivalley[, day_livermore := c(NA, diff(cumul_livermore))]#
+# Calculate (smoothed) 7 day average for the day change#
+# feed in a vector, returns a vector#
+seven_day_mean <- function(x){#
+#
+	# initialize#
+	placeholder <- NULL#
+	# loop through each row#
+	vectorlength <- length(x)#
+	for (i in 1:vectorlength){#
+#
+		# for first 6 rows, calculate the mean from row 1 to current row#
+		if (i %in% 1:6){#
+			targetmean <- mean(x[1:i], na.rm=T)#
+		} #
+		# otherwise, calculate mean from current-6th row to current row#
+		else {#
+			targetmean <- mean(x[(i-6):i], na.rm=T)#
+		} #
+		placeholder <- c(placeholder, round(targetmean, 2))#
+#
+	}#
+#
+	# return the resulted vector	#
+	return(placeholder)#
+}#
+#
+trivalley$day_7mean_dublin <- seven_day_mean(trivalley$day_dublin)#
+trivalley$day_7mean_pleasanton <- seven_day_mean(trivalley$day_pleasanton)#
+trivalley$day_7mean_livermore <- seven_day_mean(trivalley$day_livermore)#
+# Get population numbers as well#
+pop_dublin <- byplace[Geography=="Dublin"]$Population#
+pop_pleasanton <- byplace[Geography=="Pleasanton"]$Population#
+pop_livermore <- byplace[Geography=="Livermore"]$Population#
+# Get cumulative per 100k rate#
+trivalley[, cumul_per100k_dublin := round(cumul_dublin / pop_dublin * 100000, 2)]#
+trivalley[, cumul_per100k_pleasanton := round(cumul_pleasanton / pop_pleasanton * 100000, 2)]#
+trivalley[, cumul_per100k_livermore := round(cumul_livermore / pop_livermore * 100000, 2)]#
+# Calculate day changes per 100k rates#
+trivalley[, day_per100k_dublin := round(day_dublin / pop_dublin * 100000, 2)]#
+trivalley[, day_per100k_pleasanton := round(day_pleasanton / pop_pleasanton * 100000, 2)]#
+trivalley[, day_per100k_livermore := round(day_livermore / pop_livermore * 100000, 2)]#
+#
+trivalley[, day_7mean_per100k_dublin := round(day_7mean_dublin / pop_dublin * 100000, 2)]#
+trivalley[, day_7mean_per100k_pleasanton := round(day_7mean_pleasanton / pop_pleasanton * 100000, 2)]#
+trivalley[, day_7mean_per100k_livermore := round(day_7mean_livermore / pop_livermore * 100000, 2)]#
+###############
+# Make plots ##
+###############
+#
+library(plotly)#
+#
+# cumulative#
+fig_cumul <- plot_ly() %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_dublin, name="Dublin", line=list(color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_pleasanton, name="Pleasanton", line=list(color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_livermore, name="Livermore", line=list(color="blue")) %>%#
+	layout(title="Cumulative # of COVID-19 cases",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+#
+# cumulative per 100K#
+fig_cumul_100K <- plot_ly(mode="lines") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_per100k_dublin, name="Dublin", line=list(color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_per100k_pleasanton, name="Pleasanton", line=list(color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_per100k_livermore, name="Livermore", line=list(color="blue")) %>%#
+	layout(title="Cumulative # of COVID-19 cases, per 100K population",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+# Day changes#
+fig_day <- plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_pleasanton, name="Pleasanton (raw)", marker=list(opacity=0.2, color="orange")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_livermore, name="Livermore (raw)", marker=list(opacity=0.2, color="blue")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, name="Dublin (7 day ave.)", line=list(shape="spline", color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_pleasanton, name="Pleasanton (7 day ave.)", line=list(shape="spline", color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_livermore, name="Livermore (7 day ave.)", line=list(shape="spline", color="blue")) %>%#
+	layout(title="# of new COVID-19 cases by day\nDots = raw numbers, lines = 7 day average",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+#
+# Day changes, per 100K#
+fig_day_100K <- plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_pleasanton, name="Pleasanton (raw)", marker=list(opacity=0.2, color="orange")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_livermore, name="Livermore (raw)", marker=list(opacity=0.2, color="blue")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_dublin, name="Dublin (7 day ave.)", line=list(shape="spline", color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_pleasanton, name="Pleasanton (7 day ave.)", line=list(shape="spline", color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_livermore, name="Livermore (7 day ave.)", line=list(shape="spline", color="blue")) %>%#
+	layout(title="# of new COVID-19 cases per 100K population, by day\nDots = raw numbers, lines = 7 day average",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+###################
+# Make dashboard ##
+###################
+#
+# make dashboard, copy to root directory#
+rmarkdown::render(input = "index.Rmd")#
+file.copy("index.html", "../docs/", overwrite=T)
+library(data.table)#
+# Get current time for later use#
+currenttime <- paste("Last updated: ", format(Sys.time(), "%Y-%m-%d %H:%M"), " (Pacific Time)", sep="")#
+#
+# Read data from https://data.acgov.org/datasets/#
+# Also save a copy#
+#
+byplace <- fread("https://opendata.arcgis.com/datasets/f6195a2de0b0440c99ceb9290fa95316_0.csv")#
+download.file("https://opendata.arcgis.com/datasets/f6195a2de0b0440c99ceb9290fa95316_0.csv", "f6195a2de0b0440c99ceb9290fa95316_0.csv")#
+#
+cumulative_byplace <- fread("https://opendata.arcgis.com/datasets/e9ed9fa8d5d54d0e80dbfb95b2e142f5_0.csv")#
+download.file("https://opendata.arcgis.com/datasets/e9ed9fa8d5d54d0e80dbfb95b2e142f5_0.csv", "e9ed9fa8d5d54d0e80dbfb95b2e142f5_0.csv")#
+#############################
+# Data wrangling / summary ##
+#############################
+#
+# Change "DtCreate" to a date vector#
+cumulative_byplace[, record_date := as.Date(DtCreate)]#
+# Sorry - only interested in Trivalley for now#
+# Subset dates and Trivalley data#
+# Sort by date#
+trivalley <- cumulative_byplace[, list(record_date, Dublin, Pleasanton, Livermore)]#
+setorder(trivalley, record_date)#
+#
+# get the earliest and latest dates in dataset#
+dayEarliest <- min(trivalley$record_date, na.rm=T)#
+dayLatest <- max(trivalley$record_date, na.rm=T)#
+# Data has both "0" cases and "<10" cases#
+# For ease of plotting, change them to NAs#
+#
+remove_tens <- function(x){#
+	gsub("^0|<10", NA, x)#
+}#
+#
+trivalley <- trivalley[, lapply(.SD, remove_tens)]#
+# Rename columns for clarity, fix classes#
+names(trivalley) <- c("record_date", "cumul_dublin", "cumul_pleasanton", "cumul_livermore")#
+trivalley[, record_date := as.Date(record_date)]#
+trivalley[, cumul_dublin := as.integer(cumul_dublin)]#
+trivalley[, cumul_pleasanton := as.integer(cumul_pleasanton)]#
+trivalley[, cumul_livermore := as.integer(cumul_livermore)]#
+# Calculate day change#
+trivalley[, day_dublin := c(NA, diff(cumul_dublin))]#
+trivalley[, day_pleasanton := c(NA, diff(cumul_pleasanton))]#
+trivalley[, day_livermore := c(NA, diff(cumul_livermore))]#
+# Calculate (smoothed) 7 day average for the day change#
+# feed in a vector, returns a vector#
+seven_day_mean <- function(x){#
+#
+	# initialize#
+	placeholder <- NULL#
+	# loop through each row#
+	vectorlength <- length(x)#
+	for (i in 1:vectorlength){#
+#
+		# for first 6 rows, calculate the mean from row 1 to current row#
+		if (i %in% 1:6){#
+			targetmean <- mean(x[1:i], na.rm=T)#
+		} #
+		# otherwise, calculate mean from current-6th row to current row#
+		else {#
+			targetmean <- mean(x[(i-6):i], na.rm=T)#
+		} #
+		placeholder <- c(placeholder, round(targetmean, 2))#
+#
+	}#
+#
+	# return the resulted vector	#
+	return(placeholder)#
+}#
+#
+trivalley$day_7mean_dublin <- seven_day_mean(trivalley$day_dublin)#
+trivalley$day_7mean_pleasanton <- seven_day_mean(trivalley$day_pleasanton)#
+trivalley$day_7mean_livermore <- seven_day_mean(trivalley$day_livermore)#
+# Get population numbers as well#
+pop_dublin <- byplace[Geography=="Dublin"]$Population#
+pop_pleasanton <- byplace[Geography=="Pleasanton"]$Population#
+pop_livermore <- byplace[Geography=="Livermore"]$Population#
+# Get cumulative per 100k rate#
+trivalley[, cumul_per100k_dublin := round(cumul_dublin / pop_dublin * 100000, 2)]#
+trivalley[, cumul_per100k_pleasanton := round(cumul_pleasanton / pop_pleasanton * 100000, 2)]#
+trivalley[, cumul_per100k_livermore := round(cumul_livermore / pop_livermore * 100000, 2)]#
+# Calculate day changes per 100k rates#
+trivalley[, day_per100k_dublin := round(day_dublin / pop_dublin * 100000, 2)]#
+trivalley[, day_per100k_pleasanton := round(day_pleasanton / pop_pleasanton * 100000, 2)]#
+trivalley[, day_per100k_livermore := round(day_livermore / pop_livermore * 100000, 2)]#
+#
+trivalley[, day_7mean_per100k_dublin := round(day_7mean_dublin / pop_dublin * 100000, 2)]#
+trivalley[, day_7mean_per100k_pleasanton := round(day_7mean_pleasanton / pop_pleasanton * 100000, 2)]#
+trivalley[, day_7mean_per100k_livermore := round(day_7mean_livermore / pop_livermore * 100000, 2)]#
+###############
+# Make plots ##
+###############
+#
+library(plotly)#
+#
+# cumulative#
+fig_cumul <- plot_ly() %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_dublin, name="Dublin", line=list(color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_pleasanton, name="Pleasanton", line=list(color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_livermore, name="Livermore", line=list(color="blue")) %>%#
+	layout(title="Cumulative # of COVID-19 cases",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+#
+# cumulative per 100K#
+fig_cumul_100K <- plot_ly(mode="lines") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_per100k_dublin, name="Dublin", line=list(color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_per100k_pleasanton, name="Pleasanton", line=list(color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_per100k_livermore, name="Livermore", line=list(color="blue")) %>%#
+	layout(title="Cumulative # of COVID-19 cases, per 100K population",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+# Day changes#
+fig_day <- plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_pleasanton, name="Pleasanton (raw)", marker=list(opacity=0.2, color="orange")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_livermore, name="Livermore (raw)", marker=list(opacity=0.2, color="blue")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, name="Dublin (7 day ave.)", line=list(shape="spline", color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_pleasanton, name="Pleasanton (7 day ave.)", line=list(shape="spline", color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_livermore, name="Livermore (7 day ave.)", line=list(shape="spline", color="blue")) %>%#
+	layout(title="# of new COVID-19 cases by day\nDots = raw numbers, lines = 7 day average",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+#
+# Day changes, per 100K#
+fig_day_100K <- plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_pleasanton, name="Pleasanton (raw)", marker=list(opacity=0.2, color="orange")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_livermore, name="Livermore (raw)", marker=list(opacity=0.2, color="blue")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_dublin, name="Dublin (7 day ave.)", line=list(shape="spline", color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_pleasanton, name="Pleasanton (7 day ave.)", line=list(shape="spline", color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_livermore, name="Livermore (7 day ave.)", line=list(shape="spline", color="blue")) %>%#
+	layout(title="# of new COVID-19 cases per 100K population, by day\nDots = raw numbers, lines = 7 day average",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+###################
+# Make dashboard ##
+###################
+#
+# make dashboard, copy to root directory#
+rmarkdown::render(input = "index.Rmd")
+cumulative_byplace
+trivalley
+dayEarliest
+dayLatest
+cumulative_byplace
+file.copy("index.html", "../docs/", overwrite=T)
+library(data.table)#
+# Get current time for later use#
+currenttime <- paste("Last updated: ", format(Sys.time(), "%Y-%m-%d %H:%M"), " (Pacific Time)", sep="")#
+#
+# Read data from https://data.acgov.org/datasets/#
+# Also save a copy#
+#
+byplace <- fread("https://opendata.arcgis.com/datasets/f6195a2de0b0440c99ceb9290fa95316_0.csv")#
+download.file("https://opendata.arcgis.com/datasets/f6195a2de0b0440c99ceb9290fa95316_0.csv", "f6195a2de0b0440c99ceb9290fa95316_0.csv")#
+#
+cumulative_byplace <- fread("https://opendata.arcgis.com/datasets/e9ed9fa8d5d54d0e80dbfb95b2e142f5_0.csv")#
+download.file("https://opendata.arcgis.com/datasets/e9ed9fa8d5d54d0e80dbfb95b2e142f5_0.csv", "e9ed9fa8d5d54d0e80dbfb95b2e142f5_0.csv")#
+#############################
+# Data wrangling / summary ##
+#############################
+#
+# Change "DtCreate" to a date vector#
+cumulative_byplace[, record_date := as.Date(DtCreate)]#
+# Sorry - only interested in Trivalley for now#
+# Subset dates and Trivalley data#
+# Sort by date#
+trivalley <- cumulative_byplace[, list(record_date, Dublin, Pleasanton, Livermore)]#
+setorder(trivalley, record_date)#
+#
+# get the earliest and latest dates in dataset#
+dayEarliest <- min(trivalley$record_date, na.rm=T)#
+dayLatest <- max(trivalley$record_date, na.rm=T)#
+# Data has both "0" cases and "<10" cases#
+# For ease of plotting, change them to NAs#
+#
+remove_tens <- function(x){#
+	gsub("^0|<10", NA, x)#
+}#
+#
+trivalley <- trivalley[, lapply(.SD, remove_tens)]#
+# Rename columns for clarity, fix classes#
+names(trivalley) <- c("record_date", "cumul_dublin", "cumul_pleasanton", "cumul_livermore")#
+trivalley[, record_date := as.Date(record_date)]#
+trivalley[, cumul_dublin := as.integer(cumul_dublin)]#
+trivalley[, cumul_pleasanton := as.integer(cumul_pleasanton)]#
+trivalley[, cumul_livermore := as.integer(cumul_livermore)]#
+# Calculate day change#
+trivalley[, day_dublin := c(NA, diff(cumul_dublin))]#
+trivalley[, day_pleasanton := c(NA, diff(cumul_pleasanton))]#
+trivalley[, day_livermore := c(NA, diff(cumul_livermore))]#
+# Calculate (smoothed) 7 day average for the day change#
+# feed in a vector, returns a vector#
+seven_day_mean <- function(x){#
+#
+	# initialize#
+	placeholder <- NULL#
+	# loop through each row#
+	vectorlength <- length(x)#
+	for (i in 1:vectorlength){#
+#
+		# for first 6 rows, calculate the mean from row 1 to current row#
+		if (i %in% 1:6){#
+			targetmean <- mean(x[1:i], na.rm=T)#
+		} #
+		# otherwise, calculate mean from current-6th row to current row#
+		else {#
+			targetmean <- mean(x[(i-6):i], na.rm=T)#
+		} #
+		placeholder <- c(placeholder, round(targetmean, 2))#
+#
+	}#
+#
+	# return the resulted vector	#
+	return(placeholder)#
+}#
+#
+trivalley$day_7mean_dublin <- seven_day_mean(trivalley$day_dublin)#
+trivalley$day_7mean_pleasanton <- seven_day_mean(trivalley$day_pleasanton)#
+trivalley$day_7mean_livermore <- seven_day_mean(trivalley$day_livermore)#
+# Get population numbers as well#
+pop_dublin <- byplace[Geography=="Dublin"]$Population#
+pop_pleasanton <- byplace[Geography=="Pleasanton"]$Population#
+pop_livermore <- byplace[Geography=="Livermore"]$Population#
+# Get cumulative per 100k rate#
+trivalley[, cumul_per100k_dublin := round(cumul_dublin / pop_dublin * 100000, 2)]#
+trivalley[, cumul_per100k_pleasanton := round(cumul_pleasanton / pop_pleasanton * 100000, 2)]#
+trivalley[, cumul_per100k_livermore := round(cumul_livermore / pop_livermore * 100000, 2)]#
+# Calculate day changes per 100k rates#
+trivalley[, day_per100k_dublin := round(day_dublin / pop_dublin * 100000, 2)]#
+trivalley[, day_per100k_pleasanton := round(day_pleasanton / pop_pleasanton * 100000, 2)]#
+trivalley[, day_per100k_livermore := round(day_livermore / pop_livermore * 100000, 2)]#
+#
+trivalley[, day_7mean_per100k_dublin := round(day_7mean_dublin / pop_dublin * 100000, 2)]#
+trivalley[, day_7mean_per100k_pleasanton := round(day_7mean_pleasanton / pop_pleasanton * 100000, 2)]#
+trivalley[, day_7mean_per100k_livermore := round(day_7mean_livermore / pop_livermore * 100000, 2)]#
+###############
+# Make plots ##
+###############
+#
+library(plotly)#
+#
+# cumulative#
+fig_cumul <- plot_ly() %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_dublin, name="Dublin", line=list(color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_pleasanton, name="Pleasanton", line=list(color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_livermore, name="Livermore", line=list(color="blue")) %>%#
+	layout(title="Cumulative # of COVID-19 cases",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+#
+# cumulative per 100K#
+fig_cumul_100K <- plot_ly(mode="lines") %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_per100k_dublin, name="Dublin", line=list(color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_per100k_pleasanton, name="Pleasanton", line=list(color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$cumul_per100k_livermore, name="Livermore", line=list(color="blue")) %>%#
+	layout(title="Cumulative # of COVID-19 cases, per 100K population",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+# Day changes#
+fig_day <- plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_pleasanton, name="Pleasanton (raw)", marker=list(opacity=0.2, color="orange")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_livermore, name="Livermore (raw)", marker=list(opacity=0.2, color="blue")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_dublin, name="Dublin (7 day ave.)", line=list(shape="spline", color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_pleasanton, name="Pleasanton (7 day ave.)", line=list(shape="spline", color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_livermore, name="Livermore (7 day ave.)", line=list(shape="spline", color="blue")) %>%#
+	layout(title="# of new COVID-19 cases by day\nDots = raw numbers, lines = 7 day average",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+#
+# Day changes, per 100K#
+fig_day_100K <- plot_ly() %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_dublin, name="Dublin (raw)", marker=list(opacity=0.2, color="green")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_pleasanton, name="Pleasanton (raw)", marker=list(opacity=0.2, color="orange")) %>%#
+	add_trace(type="scatter", mode="markers", x=trivalley$record_date, y=trivalley$day_per100k_livermore, name="Livermore (raw)", marker=list(opacity=0.2, color="blue")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_dublin, name="Dublin (7 day ave.)", line=list(shape="spline", color="green")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_pleasanton, name="Pleasanton (7 day ave.)", line=list(shape="spline", color="orange")) %>%#
+	add_trace(type="scatter", mode="lines", x=trivalley$record_date, y=trivalley$day_7mean_per100k_livermore, name="Livermore (7 day ave.)", line=list(shape="spline", color="blue")) %>%#
+	layout(title="# of new COVID-19 cases per 100K population, by day\nDots = raw numbers, lines = 7 day average",#
+		xaxis=list(title="Dates", range=c(dayEarliest-1, dayLatest+1)))#
+###################
+# Make dashboard ##
+###################
+#
+# make dashboard, copy to root directory#
+rmarkdown::render(input = "index.Rmd")#
+file.copy("index.html", "../docs/", overwrite=T)
