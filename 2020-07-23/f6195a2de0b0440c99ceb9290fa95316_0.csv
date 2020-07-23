@@ -1,0 +1,26 @@
+﻿Geography,Cases,Population,Case_Rate,ObjectId
+Alameda County,9643,1685886,572,1
+Berkeley LHJ,341,124553.1859,273.8,2
+Alameda County LHJ,9302,1561332.814,595.8,3
+Under Investigation,388,NA,NA,4
+Homeless,110,NA,NA,5
+Address Unknown,37,NA,NA,6
+Santa Rita Jail,170,NA,NA,7
+Alameda,153,80104.31702,191,8
+Albany,28,19586.51338,143,9
+Dublin,104,65219.06197,159.5,10
+Emeryville,46,12004.00847,383.2,11
+Fremont,497,234841.1497,211.6,12
+Hayward,1430,161016.5678,888.1,13
+Livermore,393,91943.68773,427.4,14
+Newark,228,49196.55038,463.4,15
+Oakland,3763,437194.9877,860.7,16
+Piedmont,20,11534.37675,173.4,17
+Pleasanton,198,81292.00067,243.6,18
+San Leandro,495,90717.6273,545.6,19
+Union City,297,75660.64284,392.5,20
+"Eden Area MAC (Ashland, Cherryland, Hayward Acres, San Lorenzo)",572,69137.06614,827.3,21
+Castro Valley MAC,275,65269.06603,421.3,22
+Fairview MAC,80,10725.38585,745.9,23
+Sunol,NA,996.8187168,NA,24
+Remainder of County,NA,4892.985567,NA,25
