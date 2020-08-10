@@ -9,3 +9,5 @@ From data.acgov.org - [[1](https://data.acgov.org/datasets/AC-HCSA::alameda-coun
 
 ## Updates
 - 2020-06-29: [Link to dashboard](https://tszhim-tsui.github.io/2020-trivalley-covid19)
+- No updates from Alameda County since 2020-08-06
+- 2020-08-10: Alameda County has removed the two data sets from their website
