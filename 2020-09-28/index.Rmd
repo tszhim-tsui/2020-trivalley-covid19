@@ -1,0 +1,82 @@
+---
+title: "COVID 19 in Tri-Valley, San Francisco Bay Area"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+    theme: journal
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(plotly)
+```
+
+-----------------------------------------------------------------------
+
+
+
+
+Cumulative # of cases
+==========
+
+Row {.tabset}
+----------
+
+### Raw # of cases
+
+```{r, echo=F}
+fig_cumul
+```
+
+### Cases per 100K population
+
+```{r, echo=F}
+fig_cumul_100K
+```
+
+
+
+Row {data-height=55}
+----------
+
+```{r, echo=F}
+print(currenttime)
+```
+
+
+
+
+
+
+
+
+
+
+Number of new cases by day
+==========
+
+Row {.tabset}
+----------
+
+
+### Raw # of cases
+
+```{r, echo=F}
+fig_day
+```
+
+
+### Cases per 100K population
+
+```{r, echo=F}
+fig_day_100K
+```
+
+
+
+Row {data-height=55}
+----------
+```{r, echo=F}
+print(currenttime)
+```
