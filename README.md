@@ -10,4 +10,5 @@ Covid-19 data in [Tri-Valley area](https://en.wikipedia.org/wiki/Tri-Valley), a 
 - 2020-08-10: Alameda County has removed the two data sets from their website
 - 2020-09-01: New data source from data.acgov.org: [[3](https://data.acgov.org/datasets/5d6bf4760af64db48b6d053e7569a47b/data?layer=3)]
 - 2020-09-03: Seems like this source [[4](https://data.acgov.org/datasets/5d6bf4760af64db48b6d053e7569a47b_3/)] is updated slightly more often. (?)
-- 2020-09-11: Alameda County has, once again, stopped updating the data source. I will update the dashboard once the update resumes. 
+- 2020-09-11: Alameda County has, once again, stopped updating the data source. I will update the dashboard once the update resumes.
+- 2020-11-14: Alameda County has removed this data source [[4](https://data.acgov.org/datasets/5d6bf4760af64db48b6d053e7569a47b_3/)]. 
