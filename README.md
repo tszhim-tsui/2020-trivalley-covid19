@@ -16,3 +16,4 @@ Covid-19 data in [Tri-Valley area](https://en.wikipedia.org/wiki/Tri-Valley), a 
 - 2020-11-28: Alameda County has removed this data source [[4](https://data.acgov.org/datasets/5d6bf4760af64db48b6d053e7569a47b_3/)].
 - 2020-12-01: The data source [[4](https://data.acgov.org/datasets/5d6bf4760af64db48b6d053e7569a47b_3/)] has been resurrected.
 - 2021-03-17: Updated data source to [[5](https://data.acgov.org/datasets/5d6bf4760af64db48b6d053e7569a47b_6)].
+- 2021-04-19: Now using both data sources [[5](https://data.acgov.org/datasets/5d6bf4760af64db48b6d053e7569a47b_6)] and [[6](https://github.com/datadesk/california-coronavirus-data/#latimes-place-totalscsv)], to cover cities in Alameda and Contra Costa counties. 
